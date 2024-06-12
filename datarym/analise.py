@@ -6,12 +6,26 @@ def process_line(line):
 
     linhaCerta = line[3:]
 
-    
     linhaSemAspas = linhaCerta.replace('""', '"')
 
-    linhaFinal = linhaSemAspas[:-3]
+    linhaArrumada = linhaSemAspas[:-3]
+
+    # expressão regular para encontrar vírgulas seguidas por qualquer caractere que não seja uma aspa dupla ou um dígito
+    pattern = r',([^"0-9])'
+
+    # substituir vírgulas por ponto e vírgula quando a condição for atendida
+    linhaFinal = re.sub(pattern, r';\1', linhaArrumada)
 
     return linhaFinal
+
+# o process line retorna uma string
+
+#funcao pra pegar a string gerada no process line e converter em uma lista
+
+#def stringToLista(string):
+
+
+
 
 def organizaCsv():
 
@@ -37,6 +51,10 @@ def organizaCsv():
     # Criar uma lista para armazenar as linhas processadas
     processed_data = []
 
+    listaTeste = []
+    listaTeste.append(process_line(lines[1]))
+    print(listaTeste)
+
     # Processar cada linha de dados a partir da segunda linha
     for line in lines[1:]:
         processed_line = process_line(line)
@@ -49,11 +67,35 @@ def organizaCsv():
     # Exibir o DataFrame
     print(df)
 
-
 def main():
     organizaCsv()
 
-
-
 if __name__ == "__main__":
     main()
+
+def linhas_arrumadas(linha):
+
+    Numeros = [1,2,3,4,5,6,7,8,9,0]
+
+    #troca as , do lado dos ints por ;
+
+    #não sei se é assim que seleciona o char específico da string em python 
+
+    for i in linha:
+        if (linha[i] == Numeros):
+            if (linha[i + 1] == ','):
+                linha[i + 1] = ' ; ' #tirar os espaços dps
+
+    #troca os "","" por ; para separar as palavras
+
+    linha.replace(' "","" ' , ' ; ') #tirar os espaços dps
+
+    # aqui era pra tirar as "" que sobraram dps de trocar as "","" entre as palavras, não sei se tem um método só pra tirar, se tiver é melhor usar ele
+
+    linha.replace(' "" ' , ' ') #tirar os espaços dps
+
+    #troca o final de cada linha que é "; por " (basicamente só tirando o ; do final pq estamos usando ele como separador de colunas agora)
+
+    linha.replace(' "; ' , ' " ' ) #tirar os espaços dps 
+
+    return linha

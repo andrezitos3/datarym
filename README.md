@@ -1,4 +1,4 @@
-# READ ME
+# datarym 
 
 Esse projeto de análise de dados em python tem o objetivo de recomendar álbuns musicais para o usuário de acordo com suas preferências.
 

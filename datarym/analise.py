@@ -1,17 +1,17 @@
 import pandas as pd
+import re
 
 # Função para processar cada linha de dados
 def process_line(line):
-    # Ignorar o primeiro número e dividir os valores por vírgula
-    try:
-        values = line.split(',', 1)[1].split(',')
-    except IndexError:
-        # Caso a linha não tenha a estrutura esperada
-        return None
-    # Colocar todos os valores entre aspas para serem strings
-    values = [f'"{value.strip()}"' for value in values]
-    return values
 
+    linhaCerta = line[3:]
+
+    
+    linhaSemAspas = linhaCerta.replace('""', '"')
+
+    linhaFinal = linhaSemAspas[:-3]
+
+    return linhaFinal
 
 def organizaCsv():
 
@@ -22,11 +22,12 @@ def organizaCsv():
         lines = file.readlines()
 
 
-    # Supomos que a célula com as colunas está na primeira linha
-    column_cell = lines[0]
+    # o lines é o nosso input e o método process_line funciona baseado no input 
 
-    print(column_cell)
-    print(lines[1])
+    # Supomos que a célula com as colunas está na primeira linha
+    column_cell = lines[0] 
+    
+    print(process_line(lines[1]))
 
     # Remover as aspas adicionais e dividir a string para obter os nomes das colunas
     columns = column_cell.strip().replace('"', '').split(',')
@@ -48,8 +49,11 @@ def organizaCsv():
     # Exibir o DataFrame
     print(df)
 
+
 def main():
     organizaCsv()
+
+
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,8 @@
 import pandas as pd
 import re
+import csv
+import io
+
 
 # Função para processar cada linha de dados
 def process_line(line):
@@ -22,10 +25,20 @@ def process_line(line):
 
 #funcao pra pegar a string gerada no process line e converter em uma lista
 
-#def stringToLista(string):
+def stringToLista(string):
 
+    # Usar io.StringIO para tratar a string como um arquivo
+    input_string = io.StringIO(string)
 
+    # Usar csv.reader para ler a string
+    reader = csv.reader(input_string)
 
+    # Converter a linha lida em uma lista
+    fields = next(reader)
+
+    return fields
+
+# o método stringToLista retorna uma lista da linha (string)
 
 def organizaCsv():
 
@@ -35,13 +48,10 @@ def organizaCsv():
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
 
-
     # o lines é o nosso input e o método process_line funciona baseado no input 
 
     # Supomos que a célula com as colunas está na primeira linha
     column_cell = lines[0] 
-    
-    print(process_line(lines[1]))
 
     # Remover as aspas adicionais e dividir a string para obter os nomes das colunas
     columns = column_cell.strip().replace('"', '').split(',')
@@ -51,15 +61,26 @@ def organizaCsv():
     # Criar uma lista para armazenar as linhas processadas
     processed_data = []
 
-    listaTeste = []
-    listaTeste.append(process_line(lines[1]))
-    print(listaTeste)
+    # listaTeste = []
+    # listaTeste.append(stringToLista(process_line(lines[1])))
+    # print(listaTeste)
 
-    # Processar cada linha de dados a partir da segunda linha
-    for line in lines[1:]:
-        processed_line = process_line(line)
+    processed_line = []
+
+    for line in lines[1:10]:
+        processed_line = stringToLista(process_line(line))
         if processed_line and len(processed_line) == len(columns):
             processed_data.append(processed_line)
+
+
+    # Processar cada linha de dados a partir da segunda linha
+
+    for line in lines[9:]:
+        processed_line = stringToLista(process_line(line))
+        processed_line.pop(0)
+        if processed_line and len(processed_line) == len(columns):
+            processed_data.append(processed_line)
+
 
     # Criar o DataFrame com os dados processados
     df = pd.DataFrame(processed_data, columns=columns)
@@ -67,35 +88,22 @@ def organizaCsv():
     # Exibir o DataFrame
     print(df)
 
+
+def inputUsuario(): # botar df de parametro
+
+    print("-" * 30 + " RECOMENDADOR MUSICAL " + "-" *  30)
+
+    escolha = input('Digite um gênero musical:   ')
+
+
+
 def main():
+
+    # gerando o dataframe e organizando o csv
     organizaCsv()
+    inputUsuario()
+
 
 if __name__ == "__main__":
     main()
 
-def linhas_arrumadas(linha):
-
-    Numeros = [1,2,3,4,5,6,7,8,9,0]
-
-    #troca as , do lado dos ints por ;
-
-    #não sei se é assim que seleciona o char específico da string em python 
-
-    for i in linha:
-        if (linha[i] == Numeros):
-            if (linha[i + 1] == ','):
-                linha[i + 1] = ' ; ' #tirar os espaços dps
-
-    #troca os "","" por ; para separar as palavras
-
-    linha.replace(' "","" ' , ' ; ') #tirar os espaços dps
-
-    # aqui era pra tirar as "" que sobraram dps de trocar as "","" entre as palavras, não sei se tem um método só pra tirar, se tiver é melhor usar ele
-
-    linha.replace(' "" ' , ' ') #tirar os espaços dps
-
-    #troca o final de cada linha que é "; por " (basicamente só tirando o ; do final pq estamos usando ele como separador de colunas agora)
-
-    linha.replace(' "; ' , ' " ' ) #tirar os espaços dps 
-
-    return linha

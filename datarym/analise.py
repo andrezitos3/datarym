@@ -67,13 +67,15 @@ def organizaCsv():
 
     processed_line = []
 
+    # for da primeira até a nona linha porque por algum motivo ele mostra as dezenas
+
     for line in lines[1:10]:
         processed_line = stringToLista(process_line(line))
         if processed_line and len(processed_line) == len(columns):
             processed_data.append(processed_line)
 
 
-    # Processar cada linha de dados a partir da segunda linha
+    # for a partir da décima linha, excluindo o primeiro index desnecessário
 
     for line in lines[9:]:
         processed_line = stringToLista(process_line(line))
@@ -86,22 +88,39 @@ def organizaCsv():
     df = pd.DataFrame(processed_data, columns=columns)
 
     # Exibir o DataFrame
-    print(df)
+    #print(df)
+
+    return df
 
 
-def inputUsuario(): # botar df de parametro
+def inputUsuario(df): # botar df de parametro
 
     print("-" * 30 + " RECOMENDADOR MUSICAL " + "-" *  30)
 
-    escolha = input('Digite um gênero musical:   ')
+    escolha = input("Digite um ou mais gêneros musicais ---  obs: separe por vírgulas caso seja mais de um \n")
 
+    listaGen = stringToLista(escolha)
+
+    # Remover espaços no início de cada string
+    listaFormat = [s.lstrip() for s in listaGen]
+
+    generos = df[['primary_genres', 'secondary_genres']]
+
+    #verifica se tem o input escolha dentro do DataFrame generos para ver se o genero que o usuario existe 
+    for primary,secondary in generos.items():
+        print(f'colunas:{primary}')
+        print(f'generos:\n{secondary}', sep='\n')
+
+    print(listaFormat)
+
+    #print(generos)
 
 
 def main():
 
     # gerando o dataframe e organizando o csv
-    organizaCsv()
-    inputUsuario()
+    musicas = organizaCsv()
+    inputUsuario(musicas)
 
 
 if __name__ == "__main__":

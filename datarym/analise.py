@@ -110,6 +110,9 @@ def formatar_strings_lista_input(s):
     # Retornamos a string formatada
     return ''.join(resultado)
 
+# essa funcao deixa a primeira letra da string maiuscula, e depois de um espaco ou um hifen tambem fica maiuscula
+
+
 def inputUsuario(): # botar df de parametro
 
     print("-" * 30 + " RECOMENDADOR MUSICAL " + "-" *  30)
@@ -119,7 +122,7 @@ def inputUsuario(): # botar df de parametro
     listaGen = stringToLista(escolha)
 
     # Remover espaços no início de cada string
-    listaFormat = [s.lstrip() for s in listaGen]
+    listaFormat = [s.strip() for s in listaGen]
 
     # Aplicar a formatação em todas as strings da lista
     lista_final = [formatar_strings_lista_input(s) for s in listaFormat]

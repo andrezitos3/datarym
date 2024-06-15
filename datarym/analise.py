@@ -3,6 +3,8 @@ import re
 import csv
 import io
 from time import sleep
+from autoChrome import pesquisarBanda
+
 
 # Função para processar cada linha de dados
 def process_line(line):
@@ -113,15 +115,35 @@ def formatar_strings_lista_input(s):
 # essa funcao deixa a primeira letra da string maiuscula, e depois de um espaco ou um hifen tambem fica maiuscula
 
 
-def inputUsuario(): # botar df de parametro
+def inputUsuario(): 
 
     print("-" * 30 + " RECOMENDADOR MUSICAL " + "-" *  30)
 
-    escolha = input("Digite um ou mais gêneros musicais ---  obs: separe por vírgulas caso seja mais de um \n")
+    opcaoinicial = input('deseja escolher uma banda/artista ou digitar gêneros musicais? \n escolha 1 para banda/artista e 2 para generos \n').strip()
+    
+    listaGen = []
+
+    escolha = ''
+
+    while True:
+
+        if opcaoinicial == '1':
+            
+            escolha = input("Digite uma banda ou um artista para descobrir álbuns parecidos! \n")
+            listaGen = pesquisarBanda(escolha)
+            break
+
+        elif opcaoinicial == '2':
+            escolha = input("Digite um ou mais gêneros musicais ---  obs: separe por vírgulas caso seja mais de um \n")
+            listaGen = stringToLista(escolha)
+            break
+
+        else:
+            print('opcao invalida! escolha entre 1 e 2')
+            opcaoinicial = input('deseja escolher uma banda/artista ou digitar gêneros musicais? \n escolha 1 para banda/artista e 2 para generos \n').strip()
+
 
     print('')
-
-    listaGen = stringToLista(escolha)
 
     # Remover espaços no início de cada string
     listaFormat = [s.strip() for s in listaGen]
@@ -154,7 +176,7 @@ def recomenda(df, escolhas):
     return generos_filtrado
 
 # a funcao recomenda gera o dataframe filtrado de acordo com as preferencias do usuario
-    
+
 def sortear(df):
 
     # Selecionando 10 linhas aleatórias do DataFrame filtrado
@@ -166,6 +188,7 @@ def sortear(df):
     sleep(2)
 
     print('certo! aqui está 10 albuns de acordo com suas preferências')
+    print('-' * 90)
     print(generos_aleatorios[['release_name', 'artist_name', 'primary_genres']])
 
     
@@ -182,18 +205,19 @@ def main():
 
         escolhas = inputUsuario()
         
-        print(escolhas)
+        print(f'gêneros musicais identificados: {escolhas}')
         print('')
         filtro = recomenda(albuns, escolhas)
         sortear(filtro)
 
-        print('-' * 30)
+        print('-' * 90)
 
         opcao = input('deseja pesquisar outros albuns? : ')
         if opcao == 'n' or opcao == 'nao' or opcao == 'Nao':
             break
-    
-    print('encerrando o programa.... até mais')
+
+    print('')
+    print('encerrando o programa.... até mais!\n')
 
 if __name__ == "__main__":
     main()

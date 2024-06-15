@@ -1,29 +1,40 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-# Configurar o serviço do ChromeDriver
-service = Service(ChromeDriverManager().install())
+def pesquisarBanda(banda):
 
-# Iniciar uma instância do ChromeDriver
-driver = webdriver.Chrome(service=service)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service = service)
+    driver.maximize_window()
 
-# Acessar a página inicial do Google
-driver.get("https://www.google.com")
+    driver.get('https://en.wikipedia.org/wiki/Main_Page')
 
-# Localizar a barra de pesquisa pelo nome do elemento
-search_box = driver.find_element("name", "q")
+    search_box = driver.find_element(By.NAME, "search")
+    botao = driver.find_element(By.XPATH, '//button[text()="Search"]')
 
-# Inserir o termo de pesquisa
-search_box.send_keys("Selenium Python")
+    search_box.click()
+    search_box.send_keys(banda)
 
-# Enviar o formulário de pesquisa
-search_box.send_keys(Keys.RETURN)
+    botao.click()
 
-# Esperar alguns segundos para visualizar os resultados
-time.sleep(3)
+    listaGeneros = []
 
-# Fechar o navegador
-driver.quit()
+    generos = driver.find_element(By.XPATH, '//th[text()="Genres"]')
+
+    td_element = generos.find_element(By.XPATH, './following-sibling::td')
+
+    div = td_element.find_element(By.XPATH, './div')
+
+    ul = div.find_element(By.XPATH, './ul')
+
+    li = ul.find_elements(By.XPATH, './li')
+
+    for li in li:
+        listaGeneros.append(li.text)
+
+    driver.quit()
+
+    return listaGeneros

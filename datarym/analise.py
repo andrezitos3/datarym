@@ -2,7 +2,7 @@ import pandas as pd
 import re
 import csv
 import io
-
+from time import sleep
 
 # Função para processar cada linha de dados
 def process_line(line):
@@ -119,6 +119,8 @@ def inputUsuario(): # botar df de parametro
 
     escolha = input("Digite um ou mais gêneros musicais ---  obs: separe por vírgulas caso seja mais de um \n")
 
+    print('')
+
     listaGen = stringToLista(escolha)
 
     # Remover espaços no início de cada string
@@ -131,6 +133,12 @@ def inputUsuario(): # botar df de parametro
 
     #print(generos)
 
+# Função para verificar se pelo menos um gênero corresponde exatamente ao filtro
+def matches_filter(genres, filtro):
+    genres_list = [genre.strip() for genre in genres.split(',')]
+    return any(genre in filtro for genre in genres_list)
+
+
 def recomenda(df, escolhas):
 
     generos = df[['release_name','artist_name', 'primary_genres']]
@@ -140,24 +148,57 @@ def recomenda(df, escolhas):
     #    print(f'colunas: {coluna}')
     #    print(f'generos: {generos}', sep='\n')
     
-    #pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_rows', None)
 
     # Filtrando o DataFrame
     mask = generos['primary_genres'].str.contains('|'.join(escolhas), case=False, na=False)
     generos_filtrado = df[mask]
 
-    print(generos_filtrado[['release_name', 'artist_name', 'primary_genres']])
+    # print(generos_filtrado[['release_name', 'artist_name', 'primary_genres']])
 
+    return generos_filtrado
+
+# a funcao recomenda gera o dataframe filtrado de acordo com as preferencias do usuario
     
+def sortear(df):
+
+    # Selecionando 10 linhas aleatórias do DataFrame filtrado
+
+    generos_aleatorios = df.sample(n=10, random_state=1)  # random_state é usado para reprodutibilidade
+
+    print('pesquisando...\n')
+
+    sleep(2)
+
+    print('certo! aqui está 10 albuns de acordo com suas preferências')
+    print(generos_aleatorios[['release_name', 'artist_name', 'primary_genres']])
+
     
 
 def main():
 
+    print('')
+
     # gerando o dataframe e organizando o csv
     albuns = organizaCsv()
-    escolhas = inputUsuario()
-    print(escolhas)
-    recomenda(albuns, escolhas)
+
+
+    while True:
+
+        escolhas = inputUsuario()
+        
+        print(escolhas)
+        print('')
+        filtro = recomenda(albuns, escolhas)
+        sortear(filtro)
+
+        print('-' * 30)
+
+        opcao = input('deseja pesquisar outros albuns? : ')
+        if opcao == 'n' or opcao == 'nao' or opcao == 'Nao':
+            break
+    
+    print('encerrando o programa.... até mais')
 
 if __name__ == "__main__":
     main()

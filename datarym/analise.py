@@ -133,11 +133,6 @@ def inputUsuario(): # botar df de parametro
 
     #print(generos)
 
-# Função para verificar se pelo menos um gênero corresponde exatamente ao filtro
-def matches_filter(genres, filtro):
-    genres_list = [genre.strip() for genre in genres.split(',')]
-    return any(genre in filtro for genre in genres_list)
-
 
 def recomenda(df, escolhas):
 

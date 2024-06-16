@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-import time
+from selenium.common.exceptions import NoSuchElementException
 
 def pesquisarBanda(banda):
 
@@ -26,14 +26,21 @@ def pesquisarBanda(banda):
 
     td_element = generos.find_element(By.XPATH, './following-sibling::td')
 
-    div = td_element.find_element(By.XPATH, './div')
+    try:
+        div = td_element.find_element(By.XPATH, './div')
+        ul = div.find_element(By.XPATH, './ul')
+        li = ul.find_elements(By.XPATH, './li')
 
-    ul = div.find_element(By.XPATH, './ul')
+        for li in li:
+            listaGeneros.append(li.text)
 
-    li = ul.find_elements(By.XPATH, './li')
+    except NoSuchElementException:
+        a = td_element.find_element(By.XPATH, './a')
+        listaGeneros.append(a.text)
 
-    for li in li:
-        listaGeneros.append(li.text)
+    #ul = div.find_element(By.XPATH, './ul')
+
+    #li = ul.find_elements(By.XPATH, './li')
 
     driver.quit()
 

@@ -202,7 +202,6 @@ def sortear(df):
     print(generos_aleatorios[['release_name', 'artist_name', 'primary_genres']])
 
     
-
 def main():
 
     print('')
@@ -214,11 +213,22 @@ def main():
     while True:
 
         escolhas = inputUsuario()
-        
+
         print(f'gêneros musicais identificados: {escolhas}')
         print('')
-        filtro = recomenda(albuns, escolhas)
-        sortear(filtro)
+
+        try:
+            filtro = recomenda(albuns, escolhas)
+
+            if len(escolhas) == 0:
+                print("Não achei uma banda/artista com esse nome")
+
+            else:
+                sortear(filtro)
+
+        except ValueError:
+            print("Não foi possivel identificar o gênero")
+
 
         print('-' * 90)
 

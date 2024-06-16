@@ -12,6 +12,7 @@ def pesquisarBanda(banda):
     driver.maximize_window()
 
     driver.get('https://en.wikipedia.org/wiki/Main_Page')
+    listaGeneros = []
 
     search_box = driver.find_element(By.NAME, "search")
     botao = driver.find_element(By.XPATH, '//button[text()="Search"]')
@@ -21,27 +22,29 @@ def pesquisarBanda(banda):
 
     botao.click()
 
-    listaGeneros = []
-
-    generos = driver.find_element(By.XPATH, '//th[text()="Genres"]')
-
-    td_element = generos.find_element(By.XPATH, './following-sibling::td')
-
     try:
-        div = td_element.find_element(By.XPATH, './div')
-        ul = div.find_element(By.XPATH, './ul')
-        li = ul.find_elements(By.XPATH, './li')
+        generos = driver.find_element(By.XPATH, '//th[text()="Genres"]')
 
-        for li in li:
-            listaGeneros.append(li.text)
+        td_element = generos.find_element(By.XPATH, './following-sibling::td')
+
+        try:
+            div = td_element.find_element(By.XPATH, './div')
+            ul = div.find_element(By.XPATH, './ul')
+            li = ul.find_elements(By.XPATH, './li')
+
+            for li in li:
+                listaGeneros.append(li.text)
+
+        except NoSuchElementException:
+            a = td_element.find_element(By.XPATH, './a')
+            listaGeneros.append(a.text)
+
+        #ul = div.find_element(By.XPATH, './ul')
+
+        #li = ul.find_elements(By.XPATH, './li')
 
     except NoSuchElementException:
-        a = td_element.find_element(By.XPATH, './a')
-        listaGeneros.append(a.text)
-
-    #ul = div.find_element(By.XPATH, './ul')
-
-    #li = ul.find_elements(By.XPATH, './li')
+            print('')
 
     driver.quit()
 

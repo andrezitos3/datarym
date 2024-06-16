@@ -115,6 +115,16 @@ def formatar_strings_lista_input(s):
 # essa funcao deixa a primeira letra da string maiuscula, e depois de um espaco ou um hifen tambem fica maiuscula
 
 
+def remove_brackets(strings):
+    cleaned_strings = []
+    for string in strings:
+        cleaned_string = re.sub(r'\[.*?\]', '', string)  # Regex para encontrar colchetes e conteúdo entre eles
+        cleaned_strings.append(cleaned_string.strip())   # Remover espaços extras que podem ser deixados
+    return cleaned_strings
+
+# essa funcao é pra lidar com o possível erro de input com o selenium, quando a wikipedia acaba retornando índices na lista de generos (tira os colchetes)
+
+
 def inputUsuario(): 
 
     print("-" * 30 + " RECOMENDADOR MUSICAL " + "-" *  30)
@@ -130,7 +140,7 @@ def inputUsuario():
         if opcaoinicial == '1':
             
             escolha = input("Digite uma banda ou um artista para descobrir álbuns parecidos! \n")
-            listaGen = pesquisarBanda(escolha)
+            listaGen = remove_brackets(pesquisarBanda(escolha))
             break
 
         elif opcaoinicial == '2':

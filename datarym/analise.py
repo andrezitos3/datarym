@@ -191,7 +191,7 @@ def sortear(df):
 
     # Selecionando 10 linhas aleatórias do DataFrame filtrado
 
-    generos_aleatorios = df.sample(n=10, random_state=1)  # random_state é usado para reprodutibilidade
+    generos_aleatorios = df.sample(n=10)
 
     print('pesquisando...\n')
 

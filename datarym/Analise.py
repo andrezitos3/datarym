@@ -10,7 +10,6 @@ from autoChrome import pesquisarBanda
 def process_line(line):
 
     linhaCerta = line[3:]
-
     linhaSemAspas = linhaCerta.replace('""', '"')
 
     linhaArrumada = linhaSemAspas[:-3]
@@ -62,10 +61,6 @@ def organizaCsv():
 
     # Criar uma lista para armazenar as linhas processadas
     processed_data = []
-
-    # listaTeste = []
-    # listaTeste.append(stringToLista(process_line(lines[1])))
-    # print(listaTeste)
 
     processed_line = []
 
@@ -169,11 +164,6 @@ def recomenda(df, escolhas):
 
     generos = df[['release_name','artist_name', 'primary_genres']]
 
-    #verifica se tem o input escolha dentro do DataFrame generos para ver se o genero que o usuario existe 
-    #for coluna, generos in generos.items():
-    #    print(f'colunas: {coluna}')
-    #    print(f'generos: {generos}', sep='\n')
-    
     pd.set_option('display.max_rows', None)
 
     # Filtrando o DataFrame
@@ -190,7 +180,7 @@ def sortear(df):
 
     # Selecionando 10 linhas aleatórias do DataFrame filtrado
 
-    generos_aleatorios = df.sample(n=10, random_state=1)  # random_state é usado para reprodutibilidade
+    generos_aleatorios = df.sample(n=10)  # random_state é usado para reprodutibilidade
 
     print('pesquisando...\n')
 
